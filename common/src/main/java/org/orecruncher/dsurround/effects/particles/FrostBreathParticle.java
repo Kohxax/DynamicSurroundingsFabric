@@ -48,8 +48,8 @@ public class FrostBreathParticle extends TextureSheetParticle {
     }
 
     @Override
-    public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    public @NotNull ParticleRenderType getGroup() {
+        return ParticleRenderType.SINGLE_QUADS;
     }
 
     public float getSize(float tickDelta) {

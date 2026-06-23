@@ -3,7 +3,7 @@ package org.orecruncher.dsurround.config.libraries.impl;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -169,7 +169,7 @@ public class ItemLibrary implements IItemLibrary {
         return ItemClassType.NONE;
     }
 
-    private String formatItemOutput(ResourceLocation id, Item item) {
+    private String formatItemOutput(Identifier id, Item item) {
         var tags = RegistryUtils.getRegistryEntry(Registries.ITEM, item)
                 .map(e -> {
                     var t = this.tagLibrary.streamTags(e);

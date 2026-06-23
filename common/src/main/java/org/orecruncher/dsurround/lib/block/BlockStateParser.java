@@ -2,7 +2,7 @@ package org.orecruncher.dsurround.lib.block;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.apache.commons.lang3.StringUtils;
@@ -69,7 +69,7 @@ final class BlockStateParser {
             }
         }
 
-        final ResourceLocation resource = ResourceLocation.tryParse(temp);
+        final Identifier resource = Identifier.tryParse(temp);
         if (temp == null) {
             throw new BlockStateParseException(String.format("Invalid block name '%s' for entry '%s'", temp, blockName));
         }

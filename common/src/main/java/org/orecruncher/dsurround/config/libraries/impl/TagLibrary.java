@@ -7,7 +7,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -41,7 +41,7 @@ public class TagLibrary implements ITagLibrary {
 
     private final IModLog logger;
     private final ISystemClock systemClock;
-    private final Map<TagKey<?>, Collection<ResourceLocation>> tagCache;
+    private final Map<TagKey<?>, Collection<Identifier>> tagCache;
     private final ClientTagLoader tagLoader;
 
     private boolean isConnected;
@@ -206,13 +206,13 @@ public class TagLibrary implements ITagLibrary {
         this.logger.info("Tag cache initialization complete; %d tags cached, %dmillis", this.tagCache.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
-    private boolean isInCache(TagKey<?> tagKey, ResourceLocation entry) {
+    private boolean isInCache(TagKey<?> tagKey, Identifier entry) {
         if (!ModTags.getModTags().contains(tagKey))
             return false;
         return this.tagCache.computeIfAbsent(tagKey, this.tagLoader::getMembers).contains(entry);
     }
 
-    private void formatHelper(StringBuilder builder, String entryName, Collection<ResourceLocation> data) {
+    private void formatHelper(StringBuilder builder, String entryName, Collection<Identifier> data) {
         builder.append("\n").append(entryName).append(" ");
         if (data.isEmpty())
             builder.append("NONE");

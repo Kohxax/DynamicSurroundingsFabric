@@ -1,6 +1,6 @@
 package org.orecruncher.dsurround.processing.fog;
 
-import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.client.renderer.fog.FogData;
 import org.jetbrains.annotations.NotNull;
 import org.orecruncher.dsurround.Configuration;
 import org.orecruncher.dsurround.config.libraries.IBiomeLibrary;
@@ -44,30 +44,29 @@ public class HolisticFogRangeCalculator implements IFogRangeCalculator {
     }
 
     @NotNull
-    public FogRenderer.FogData render(@NotNull final FogRenderer.FogData data, float renderDistance, float partialTick) {
+    public FogData render(@NotNull final FogData data, float renderDistance, float partialTick) {
 
         if (!this.enabled())
             return data;
 
-        float start = data.start;
-        float end = data.end;
+        float start = data.environmentalStart;
+        float end = data.environmentalEnd;
 
         for (final IFogRangeCalculator calc : this.calculators) {
             if (calc.enabled()) {
-                final FogRenderer.FogData result = calc.render(data, renderDistance, partialTick);
-                if (result.start > result.end || result.start < 0 || result.end < 0) {
-                    this.logger.warn("Fog calculator '%s' reporting invalid fog range (start %f, end %f); ignored", calc.getName(), result.start, result.end);
+                final FogData result = calc.render(data, renderDistance, partialTick);
+                if (result.environmentalStart > result.environmentalEnd || result.environmentalStart < 0 || result.environmentalEnd < 0) {
+                    this.logger.warn("Fog calculator '%s' reporting invalid fog range (start %f, end %f); ignored", calc.getName(), result.environmentalStart, result.environmentalEnd);
                 } else {
-                    start = Math.min(start, result.start);
-                    end = Math.min(end, result.end);
+                    start = Math.min(start, result.environmentalStart);
+                    end = Math.min(end, result.environmentalEnd);
                 }
             }
         }
 
-        var result = new FogRenderer.FogData(data.mode);
-        result.shape = data.shape;
-        result.start = start;
-        result.end = end;
+        var result = new FogData();
+        result.environmentalStart = start;
+        result.environmentalEnd = end;
         return result;
     }
 

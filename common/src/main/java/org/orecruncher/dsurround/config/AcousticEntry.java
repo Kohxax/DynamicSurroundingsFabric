@@ -1,7 +1,6 @@
 package org.orecruncher.dsurround.config;
 
 import com.google.common.base.MoreObjects;
-import net.minecraft.util.random.Weight;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.orecruncher.dsurround.lib.WeightTable;
@@ -13,9 +12,9 @@ import org.orecruncher.dsurround.sound.ISoundFactory;
 public class AcousticEntry implements WeightTable.IItem<ISoundFactory> {
 
     private static final IConditionEvaluator CONDITION_EVALUATOR = ContainerManager.resolve(IConditionEvaluator.class);
-    private static final Weight DEFAULT_WEIGHT = Weight.of(10);
+    private static final int DEFAULT_WEIGHT = 10;
 
-    private final Weight weight;
+    private final int weight;
     private final ISoundFactory acoustic;
     private final Script conditions;
 
@@ -23,15 +22,14 @@ public class AcousticEntry implements WeightTable.IItem<ISoundFactory> {
         this(acoustic, condition, DEFAULT_WEIGHT);
     }
 
-    public AcousticEntry(final ISoundFactory acoustic, @Nullable final Script condition, Weight weight) {
+    public AcousticEntry(final ISoundFactory acoustic, @Nullable final Script condition, int weight) {
         this.acoustic = acoustic;
         this.weight = weight;
         this.conditions = condition != null ? condition : Script.TRUE;
     }
 
-    @NotNull
     @Override
-    public Weight getWeight() {
+    public int getWeightAsInt() {
         return this.weight;
     }
 
@@ -71,7 +69,7 @@ public class AcousticEntry implements WeightTable.IItem<ISoundFactory> {
 
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .addValue(getWeight())
+                .addValue(getWeightAsInt())
                 .addValue(getAcoustic().toString())
                 .addValue(getConditionsForLogging())
                 .toString();

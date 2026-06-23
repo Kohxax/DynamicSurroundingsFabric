@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
@@ -29,7 +29,7 @@ public class CompassOverlay extends AbstractOverlay {
     private static final float BAND_HEIGHT = 12F * 2;
     private static final float TEXTURE_SIZE_F = (float)TEXTURE_SIZE;
     private static final int HALF_TEXTURE_SIZE = TEXTURE_SIZE / 2;
-    private static final ResourceLocation COMPASS_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/compass.png");
+    private static final Identifier COMPASS_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/compass.png");
 
     private final ITagLibrary tagLibrary;
     private final IDimensionInformation dimensionInformation;
@@ -127,15 +127,15 @@ public class CompassOverlay extends AbstractOverlay {
         }
     }
 
-    public void drawTexture(PoseStack stack, ResourceLocation texture, float x, float y, float u, float v, float width, float height) {
+    public void drawTexture(PoseStack stack, Identifier texture, float x, float y, float u, float v, float width, float height) {
         this.drawTexture(stack, texture, x, x + width, y, y + height, width, height, u, v);
     }
 
-    void drawTexture(PoseStack stack, ResourceLocation texture, float x1, float x2, float y1, float y2, float regionWidth, float regionHeight, float u, float v) {
+    void drawTexture(PoseStack stack, Identifier texture, float x1, float x2, float y1, float y2, float regionWidth, float regionHeight, float u, float v) {
         this.drawTexturedQuad(stack, texture, x1, x2, y1, y2, (float) 0, u / TEXTURE_SIZE_F, (u + regionWidth) / TEXTURE_SIZE_F, v / TEXTURE_SIZE_F, (v + regionHeight) / TEXTURE_SIZE_F);
     }
 
-    void drawTexturedQuad(PoseStack stack, ResourceLocation texture, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {
+    void drawTexturedQuad(PoseStack stack, Identifier texture, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {
         RenderSystem.setShaderTexture(0, texture);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Matrix4f matrix4f = stack.last().pose();

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
@@ -39,11 +39,11 @@ public class ClientTagLoader {
         this.serverType = MinecraftServerType.VANILLA;
     }
 
-    public Collection<ResourceLocation> getMembers(TagKey<?> tagKey) {
+    public Collection<Identifier> getMembers(TagKey<?> tagKey) {
         return this.getTagData(tagKey, new HashSet<>()).members();
     }
 
-    public <T> Collection<ResourceLocation> getCompleteIds(TagKey<T> tagKey) {
+    public <T> Collection<Identifier> getCompleteIds(TagKey<T> tagKey) {
         return this.getTagData(tagKey, new HashSet<>()).members();
     }
 
@@ -94,7 +94,7 @@ public class ClientTagLoader {
     // This is based on TagLoader. Inspiration from Fabric client tag API.
     private <T> TagData<T> loadTagData(TagKey<T> tagKey, Set<TagKey<?>> visited) {
 
-        var completeIds = new HashSet<ResourceLocation>();
+        var completeIds = new HashSet<Identifier>();
 
         // If we can take a shortcut by looking up tag membership in the registries, do so. It's
         // faster than scanning resources directly.
@@ -120,15 +120,15 @@ public class ClientTagLoader {
             if (!entries.isEmpty()) {
                 this.logger.debug(RESOURCE_LOADING, "%s - %d entries found", tagKey, entries.size());
 
-                var lookup = new TagEntry.Lookup<ResourceLocation>() {
+                var lookup = new TagEntry.Lookup<Identifier>() {
                     @Override
-                    public @NotNull ResourceLocation element(@NotNull ResourceLocation id) {
+                    public @NotNull Identifier element(@NotNull Identifier id) {
                         return id;
                     }
 
                     @Nullable
                     @Override
-                    public Collection<ResourceLocation> tag(@NotNull ResourceLocation id) {
+                    public Collection<Identifier> tag(@NotNull Identifier id) {
                         TagKey<?> tag = TagKey.create(tagKey.registry(), id);
                         // This will trigger recursion to generate a complete list of IDs
                         ClientTagLoader.this.logger.debug(RESOURCE_LOADING, "%s - Recurse %s", tagKey, tag);
@@ -179,7 +179,7 @@ public class ClientTagLoader {
         return Optional.empty();
     }
 
-    private record TagData<T>(Set<ResourceLocation> members) {
+    private record TagData<T>(Set<Identifier> members) {
         private static final TagData<?> EMPTY = new TagData<>(ImmutableSet.of());
 
         public static <T> TagData<T> empty() {

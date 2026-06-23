@@ -7,7 +7,7 @@ import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class WarmToast  implements Toast {
-    private static final Profile DEFAULT_PROFILE = new Profile(ResourceLocation.withDefaultNamespace("toast/advancement"), 5000, ColorPalette.GOLD, ColorPalette.WHITE);
+    private static final Profile DEFAULT_PROFILE = new Profile(Identifier.withDefaultNamespace("toast/advancement"), 5000, ColorPalette.GOLD, ColorPalette.WHITE);
 
     private static final int MAX_LINE_SIZE = 200;
     private static final int MIN_LINE_SIZE = 100;
@@ -117,7 +117,7 @@ public class WarmToast  implements Toast {
         return component == null ? ImmutableList.of() : ImmutableList.of(component.getVisualOrderText());
     }
 
-    public record Profile(ResourceLocation sprite, int displayTime, TextColor titleColor, TextColor bodyColor) {
+    public record Profile(Identifier sprite, int displayTime, TextColor titleColor, TextColor bodyColor) {
 
     }
 }

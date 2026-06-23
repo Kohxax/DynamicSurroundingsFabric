@@ -4,7 +4,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.orecruncher.dsurround.lib.GameUtils;
 
 import java.util.Optional;
@@ -23,7 +23,7 @@ public class RegistryUtils {
                 .flatMap(r -> r.getHolder(r.getId(instance)));
     }
 
-    public static <T> Optional<Holder.Reference<T>> getRegistryEntry(ResourceKey<Registry<T>> registryKey, ResourceLocation location) {
+    public static <T> Optional<Holder.Reference<T>> getRegistryEntry(ResourceKey<Registry<T>> registryKey, Identifier location) {
         ResourceKey<T> rk = ResourceKey.create(registryKey, location);
         return getRegistry(registryKey)
                 .flatMap(registry -> registry.getHolder(rk));

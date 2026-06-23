@@ -8,7 +8,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.util.FormattedCharSequence;
@@ -245,7 +245,7 @@ public class IndividualSoundControlListEntry extends ContainerObjectSelectionLis
     protected List<FormattedCharSequence> getToolTip(final int mouseX, final int mouseY) {
         // Cache the static part of the tooltip if needed
         if (this.cachedToolTip.isEmpty()) {
-            ResourceLocation id = this.config.soundEventId;
+            Identifier id = this.config.soundEventId;
             this.resolveDisplayName(id.getNamespace())
                     .ifPresent(name -> {
                         FormattedCharSequence modName = FormattedCharSequence.forward(Objects.requireNonNull(ChatFormatting.stripFormatting(name)), STYLE_MOD_NAME);

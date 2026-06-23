@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -134,7 +134,7 @@ public class IndividualSoundControlList extends AbstractSelectionList<Individual
 
     protected Collection<IndividualSoundConfigEntry> getSortedSoundConfigurations() {
 
-        final Map<ResourceLocation, IndividualSoundConfigEntry> map = new HashMap<>();
+        final Map<Identifier, IndividualSoundConfigEntry> map = new HashMap<>();
 
         // Get a list of all registered sounds.  We don't use the vanilla registries since
         // we will have more sounds than are registered.

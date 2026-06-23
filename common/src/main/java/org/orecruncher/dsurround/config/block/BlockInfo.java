@@ -1,7 +1,7 @@
 package org.orecruncher.dsurround.config.block;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -62,7 +62,7 @@ public class BlockInfo {
 
     protected final int version;
     @Nullable
-    protected final ResourceLocation stepSound;
+    protected final Identifier stepSound;
     protected AcousticEntryCollection sounds = new AcousticEntryCollection();
     protected Collection<IBlockEffectProducer> blockEffects = new ObjectArray<>();
 

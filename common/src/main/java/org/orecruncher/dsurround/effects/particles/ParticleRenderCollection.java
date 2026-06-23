@@ -9,7 +9,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.orecruncher.dsurround.eventing.ClientEventHooks;
@@ -31,11 +31,13 @@ import java.util.function.Supplier;
  */
 public final class ParticleRenderCollection<TParticle extends TextureSheetParticle> extends Particle {
 
+    public static final ParticleRenderType DSURROUND_RENDER_TYPE = new ParticleRenderType("dsurround_custom");
+
     private final Consumer<Camera> setup;
-    private final Supplier<ResourceLocation> textureSupplier;
+    private final Supplier<Identifier> textureSupplier;
     private final ObjectArray<TParticle> particles;
 
-    private ParticleRenderCollection(@NotNull ClientLevel clientLevel, @NotNull Supplier<ResourceLocation> textureSupplier, @Nullable Consumer<Camera> setup) {
+    private ParticleRenderCollection(@NotNull ClientLevel clientLevel, @NotNull Supplier<Identifier> textureSupplier, @Nullable Consumer<Camera> setup) {
         super(clientLevel, 0, 0, 0);
         this.setup = Objects.requireNonNullElseGet(setup, () -> this::standardSetup);
         this.textureSupplier = textureSupplier;
@@ -45,9 +47,9 @@ public final class ParticleRenderCollection<TParticle extends TextureSheetPartic
 
     @NotNull
     @Override
-    public ParticleRenderType getRenderType() {
+    public ParticleRenderType getGroup() {
         // Can't use NO_RENDER as the ParticleEngine will not attempt to render
-        return ParticleRenderType.CUSTOM;
+        return ParticleRenderCollection.DSURROUND_RENDER_TYPE;
     }
 
     @Override
@@ -80,8 +82,8 @@ public final class ParticleRenderCollection<TParticle extends TextureSheetPartic
 
     public void add(@NotNull TParticle particle) {
         // Can only accept custom style particles
-        if (particle.getRenderType() != this.getRenderType())
-            throw new RuntimeException("Can only add render type %s particles to collection".formatted(this.getRenderType()));
+        if (particle.getGroup() != this.getGroup())
+            throw new RuntimeException("Can only add render type %s particles to collection".formatted(this.getGroup()));
         this.particles.add(particle);
     }
 
@@ -93,7 +95,7 @@ public final class ParticleRenderCollection<TParticle extends TextureSheetPartic
 
         private final String name;
         private final Consumer<Camera> setup;
-        private final Supplier<ResourceLocation> textureSupplier;
+        private final Supplier<Identifier> textureSupplier;
 
         private WeakReference<ParticleRenderCollection<TParticle>> particle;
         private String diagnostics;
@@ -105,7 +107,7 @@ public final class ParticleRenderCollection<TParticle extends TextureSheetPartic
          * @param name The name of the helper; used in diagnostics
          * @param textureSupplier Provides the texture to bind when rendering
          */
-        public Helper(@NotNull String name, @NotNull Supplier<ResourceLocation> textureSupplier) {
+        public Helper(@NotNull String name, @NotNull Supplier<Identifier> textureSupplier) {
             this(name, textureSupplier, null);
         }
 
@@ -116,7 +118,7 @@ public final class ParticleRenderCollection<TParticle extends TextureSheetPartic
          * @param textureSupplier Provides the texture to bind when rendering
          * @param setup Provides for the configuration of the rendering system if the default is not enough
          */
-        public Helper(@NotNull String name, @NotNull Supplier<ResourceLocation> textureSupplier, @Nullable Consumer<Camera> setup) {
+        public Helper(@NotNull String name, @NotNull Supplier<Identifier> textureSupplier, @Nullable Consumer<Camera> setup) {
             this.name = name;
             this.setup = setup;
             this.textureSupplier = textureSupplier;
