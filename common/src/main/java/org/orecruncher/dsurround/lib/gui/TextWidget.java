@@ -2,7 +2,6 @@ package org.orecruncher.dsurround.lib.gui;
 
 import net.minecraft.client.gui.ActiveTextCollector;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractStringWidget;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;

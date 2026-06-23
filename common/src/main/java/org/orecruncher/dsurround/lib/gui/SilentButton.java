@@ -1,5 +1,6 @@
 package org.orecruncher.dsurround.lib.gui;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -13,6 +14,11 @@ public class SilentButton extends Button {
 
     protected SilentButton(int x, int y, int width, int height, Component message, OnPress onPress, CreateNarration narrationSupplier) {
         super(x, y, width, height, message, onPress, narrationSupplier);
+    }
+
+    @Override
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.renderDefaultLabel(guiGraphics.textRendererForWidget(this, null));
     }
 
     @Override

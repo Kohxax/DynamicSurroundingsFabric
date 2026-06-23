@@ -78,17 +78,8 @@ public final class BiomeInfo implements Comparable<BiomeInfo>, IBiomeSoundProvid
 
         this.fogDensity = FogDensity.NONE;
 
-        // Check to see if the biome has a soundtrack. If so, add it to
-        // the music list.
-        if (biome != null) {
-            var accessor = (IBiomeExtended)(Object)biome;
-            accessor.dsurround_getSpecialEffects().getBackgroundMusic()
-                .ifPresent(m -> {
-                    var factory = SOUND_LIBRARY.getSoundFactoryForMusic(m);
-                    var entry = new AcousticEntry(factory, null);
-                    this.musicSounds.add(entry);
-                });
-        }
+        // Note: In 1.21.11, BiomeSpecialEffects no longer has getBackgroundMusic().
+        // Background music was moved to the environment attribute system.
     }
 
     public int getVersion() {
