@@ -118,7 +118,7 @@ public class BlockLibrary implements IBlockLibrary {
     public Stream<String> dumpBlocks(boolean noStates) {
         var blockRegistry = RegistryUtils.getRegistry(Registries.BLOCK).orElseThrow();
         var entrySet = blockRegistry.entrySet();
-        return entrySet.stream().map(kvp -> formatBlockOutput(kvp.getKey().location(), kvp.getValue(), noStates)).sorted();
+        return entrySet.stream().map(kvp -> formatBlockOutput(kvp.getKey().identifier(), kvp.getValue(), noStates)).sorted();
     }
 
     @Override
@@ -136,7 +136,7 @@ public class BlockLibrary implements IBlockLibrary {
         var blockRegistry = RegistryUtils.getRegistry(Registries.BLOCK).orElseThrow();
 
         StringBuilder builder = new StringBuilder();
-        builder.append("Tag: ").append(blockTag.location());
+        builder.append("Tag: ").append(blockTag.identifier());
         blocks.stream()
                 .map(b -> Objects.requireNonNull(blockRegistry.getKey(b)).toString())
                 .sorted()

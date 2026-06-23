@@ -104,7 +104,7 @@ public class ClientTagLoader {
             this.logger.debug(RESOURCE_LOADING, "%s - Shortcut lookup", tagKey);
             for (var holder : data) {
                 var key = holder.unwrapKey();
-                key.ifPresent(tResourceKey -> completeIds.add(tResourceKey.location()));
+                key.ifPresent(tResourceKey -> completeIds.add(tResourceKey.identifier()));
             }
         } else {
             // We never replace tag info, so we ignore and just merge in with what
@@ -158,7 +158,7 @@ public class ClientTagLoader {
     }
 
     private <T> Optional<Iterable<Holder<T>>> shortcutLookup(TagKey<T> tagKey) {
-        var namespace = tagKey.location().getNamespace();
+        var namespace = tagKey.identifier().getNamespace();
         // If its one of our tags, we always do the long lookup. They aren't really tags.
         if (namespace.equals(Library.MOD_ID))
             return Optional.empty();

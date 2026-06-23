@@ -28,7 +28,7 @@ public class DimensionInfo {
 
     public DimensionInfo(final Level world) {
         // Attributes that come from the world object itself. Set now because the config may override.
-        this.name = world.dimension().location();
+        this.name = world.dimension().identifier();
         this.seaLevel = world.getSeaLevel();
         this.skyHeight = world.getHeight();
         this.cloudHeight = this.skyHeight;

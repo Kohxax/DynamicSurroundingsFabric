@@ -66,7 +66,7 @@ public class TagLibrary implements ITagLibrary {
             return false;
         if (entry.is(tagKey))
             return true;
-        var location = entry.getBlockHolder().unwrapKey().orElseThrow().location();
+        var location = entry.getBlockHolder().unwrapKey().orElseThrow().identifier();
         return this.isInCache(tagKey, location);
     }
 
@@ -76,7 +76,7 @@ public class TagLibrary implements ITagLibrary {
             return false;
         if (entry.is(tagKey))
             return true;
-        var location = entry.getItemHolder().unwrapKey().orElseThrow().location();
+        var location = entry.getItemHolder().unwrapKey().orElseThrow().identifier();
         return this.isInCache(tagKey, location);
     }
 
@@ -87,7 +87,7 @@ public class TagLibrary implements ITagLibrary {
             var e = registryEntry.get();
             if (e.is(tagKey))
                 return true;
-            var location = e.key().location();
+            var location = e.key().identifier();
             return this.isInCache(tagKey, location);
         }
         return false;
@@ -100,7 +100,7 @@ public class TagLibrary implements ITagLibrary {
 
         var registryEntry = RegistryUtils.getRegistryEntry(Registries.ENTITY_TYPE, entry);
         if (registryEntry.isPresent()) {
-            var location = registryEntry.get().key().location();
+            var location = registryEntry.get().key().identifier();
             return this.isInCache(tagKey, location);
         }
         return false;
@@ -115,7 +115,7 @@ public class TagLibrary implements ITagLibrary {
 
         var registryEntry = RegistryUtils.getRegistryEntry(Registries.FLUID, entry.getType());
         if (registryEntry.isPresent()) {
-            var location = registryEntry.get().key().location();
+            var location = registryEntry.get().key().identifier();
             return this.isInCache(tagKey, location);
         }
         return false;
@@ -158,7 +158,7 @@ public class TagLibrary implements ITagLibrary {
     @Override
     public <T> String asString(Stream<TagKey<T>> tagStream) {
         return tagStream
-                .map(key -> key.location().toString())
+                .map(key -> key.identifier().toString())
                 .sorted()
                 .collect(Collectors.joining(", "));
     }
@@ -175,7 +175,7 @@ public class TagLibrary implements ITagLibrary {
     @Override
     @SuppressWarnings("unchecked")
     public <T> Stream<TagKey<T>> streamTags(Holder<T> registryEntry) {
-        var location = registryEntry.unwrapKey().orElseThrow().location();
+        var location = registryEntry.unwrapKey().orElseThrow().identifier();
         Set<TagKey<T>> tags = registryEntry.tags().collect(toSet());
         for (var kvp : this.tagCache.entrySet()) {
             if (kvp.getValue().contains(location))

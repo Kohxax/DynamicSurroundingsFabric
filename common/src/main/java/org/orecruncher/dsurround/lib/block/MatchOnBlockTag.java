@@ -30,6 +30,6 @@ public class MatchOnBlockTag extends BlockStateMatcher {
 
     @Override
     public String toString() {
-        return "MatchOnBlockTag{" + this.tagId.location() + "}";
+        return "MatchOnBlockTag{" + this.tagId.identifier() + "}";
     }
 }

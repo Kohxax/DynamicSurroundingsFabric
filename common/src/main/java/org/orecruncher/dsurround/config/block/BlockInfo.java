@@ -225,7 +225,7 @@ public class BlockInfo {
             result = Reflectance.NONE;
 
         if (result == null) {
-            var pathString = state.getBlockHolder().unwrapKey().map(k -> k.location().getPath()).orElse(null);
+            var pathString = state.getBlockHolder().unwrapKey().map(k -> k.identifier().getPath()).orElse(null);
             if (pathString != null) {
                 if (pathString.contains("panes") || pathString.contains("wall"))
                     result = Reflectance.LOW;
@@ -312,7 +312,7 @@ public class BlockInfo {
             result = Occlusion.NONE;
 
         if (result == null) {
-            var pathString = state.getBlockHolder().unwrapKey().map(k -> k.location().getPath()).orElse(null);
+            var pathString = state.getBlockHolder().unwrapKey().map(k -> k.identifier().getPath()).orElse(null);
             if (pathString != null) {
                 if (pathString.contains("chest") || pathString.contains("glass"))
                     result = Occlusion.LOW;

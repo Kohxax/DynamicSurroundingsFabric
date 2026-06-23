@@ -192,7 +192,7 @@ public final class BiomeLibrary implements IBiomeLibrary {
 
     private static Identifier getBiomeId(Biome biome) {
         return RegistryUtils.getRegistryEntry(Registries.BIOME, biome)
-                .map(holder -> holder.unwrapKey().orElseThrow().location()).orElseThrow();
+                .map(holder -> holder.unwrapKey().orElseThrow().identifier()).orElseThrow();
     }
 
     @Override

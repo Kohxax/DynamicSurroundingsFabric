@@ -15,7 +15,7 @@ public class RegistryUtils {
     public static <T> Optional<Registry<T>> getRegistry(ResourceKey<? extends Registry<T>> registryKey) {
         return GameUtils.getRegistryManager()
                 .flatMap(rm -> rm.registry(registryKey))
-                .or(() -> (Optional<Registry<T>>) BuiltInRegistries.REGISTRY.getOptional(registryKey.location()));
+                .or(() -> (Optional<Registry<T>>) BuiltInRegistries.REGISTRY.getOptional(registryKey.identifier()));
     }
 
     public static <T> Optional<Holder.Reference<T>> getRegistryEntry(ResourceKey<Registry<T>> registryKey, T instance) {

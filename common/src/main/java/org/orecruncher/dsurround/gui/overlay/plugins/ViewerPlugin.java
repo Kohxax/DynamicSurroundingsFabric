@@ -106,7 +106,7 @@ public class ViewerPlugin implements IDiagnosticPlugin {
         if (stack.isEmpty())
             return;
         var holder = stack.getItemHolder();
-        holder.unwrapKey().ifPresent(key -> data.add(Component.literal(key.location().toString())));
+        holder.unwrapKey().ifPresent(key -> data.add(Component.literal(key.identifier().toString())));
         this.processTags(holder, data);
     }
 
