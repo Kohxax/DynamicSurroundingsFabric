@@ -5,6 +5,7 @@ import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import org.orecruncher.dsurround.Configuration;
 import org.orecruncher.dsurround.Constants;
 import org.orecruncher.dsurround.gui.overlay.DiagnosticsOverlay;
@@ -18,6 +19,8 @@ import org.orecruncher.dsurround.sound.IAudioPlayer;
 
 public class KeyBindings {
 
+    private static final KeyMapping.Category DSURROUND_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(Library.MOD_ID, "keybind_section"));
+
     public static final KeyMapping modConfigurationMenu;
     public static final KeyMapping individualSoundConfigBinding;
     public static final KeyMapping diagnosticHud;
@@ -27,20 +30,20 @@ public class KeyBindings {
         modConfigurationMenu = registerKeyBinding(
                 "dsurround.text.keybind.modConfigurationMenu",
                 modMenuKey,
-                "dsurround.text.keybind.section");
+                DSURROUND_CATEGORY);
 
         individualSoundConfigBinding = registerKeyBinding(
                 "dsurround.text.keybind.individualSoundConfig",
                 InputConstants.UNKNOWN.getValue(),
-                "dsurround.text.keybind.section");
+                DSURROUND_CATEGORY);
 
         diagnosticHud = registerKeyBinding(
                 "dsurround.text.keybind.diagnosticHud",
                 InputConstants.UNKNOWN.getValue(),
-                "dsurround.text.keybind.section");
+                DSURROUND_CATEGORY);
     }
 
-    private static KeyMapping registerKeyBinding(String translationKey, int code, String category) {
+    private static KeyMapping registerKeyBinding(String translationKey, int code, KeyMapping.Category category) {
         var mapping = new KeyMapping(translationKey, code, category);
         KeyMappingRegistry.register(mapping);
         return mapping;

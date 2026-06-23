@@ -44,7 +44,7 @@ public class SoundEngineDiagnosticsPlugin implements IDiagnosticPlugin {
 
         if (!sources.isEmpty()) {
             accessors.dsurround_getSources().keySet().stream()
-                    .map(SoundInstance::getLocation)
+                    .map(SoundInstance::getIdentifier)
                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                     .entrySet().stream()
                     .map(e -> FMT_DBG_SOUND.formatted(e.getKey(), e.getValue()))

@@ -23,7 +23,7 @@ public class SoundToast {
                 var titleLine = Component.translatable("dsurround.text.toast.music.title", title);
                 var authorLine = Component.translatable("dsurround.text.toast.music.author", author);
                 var toast = WarmToast.multiline(GameUtils.getMC(), SOUND_TOAST_PROFILE, titleLine, authorLine);
-                GameUtils.getMC().getToasts().addToast(toast);
+                GameUtils.getMC().getToastManager().addToast(toast);
             }
         }
     }

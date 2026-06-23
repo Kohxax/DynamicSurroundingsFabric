@@ -1,14 +1,11 @@
 package org.orecruncher.dsurround.gui.overlay;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import org.joml.Matrix4f;
 import org.orecruncher.dsurround.Constants;
 import org.orecruncher.dsurround.Configuration;
 import org.orecruncher.dsurround.config.libraries.IDimensionInformation;
@@ -93,8 +90,7 @@ public class CompassOverlay extends AbstractOverlay {
         var matrixStack = context.pose();
 
         try {
-
-            matrixStack.pushPose();
+            matrixStack.pushMatrix();
 
             float rotation;
 
@@ -109,7 +105,7 @@ public class CompassOverlay extends AbstractOverlay {
             float x = (context.guiWidth() - BAND_WIDTH * this.scale) / 2F;
             float y = (context.guiHeight() - CROSSHAIR_OFFSET - BAND_HEIGHT * this.scale) / 2F;
 
-            matrixStack.scale(this.scale, this.scale, 0F);
+            matrixStack.scale(this.scale, this.scale);
             x /= this.scale;
             y /= this.scale;
 
@@ -120,33 +116,17 @@ public class CompassOverlay extends AbstractOverlay {
                 v += BAND_HEIGHT;
             }
 
-            this.drawTexture(matrixStack, COMPASS_TEXTURE, x, y, direction, v, BAND_WIDTH, BAND_HEIGHT);
+            // Use GuiGraphics.blit for texture rendering
+            // blit(Identifier, x, y, width, height, u1, v1, u2, v2)
+            float u1 = direction / TEXTURE_SIZE_F;
+            float u2 = (direction + BAND_WIDTH) / TEXTURE_SIZE_F;
+            float v1 = v / TEXTURE_SIZE_F;
+            float v2 = (v + BAND_HEIGHT) / TEXTURE_SIZE_F;
+            context.blit(COMPASS_TEXTURE, (int) x, (int) y, (int) BAND_WIDTH, (int) BAND_HEIGHT, u1, v1, u2, v2);
 
         } finally {
-            matrixStack.popPose();
+            matrixStack.popMatrix();
         }
-    }
-
-    public void drawTexture(PoseStack stack, Identifier texture, float x, float y, float u, float v, float width, float height) {
-        this.drawTexture(stack, texture, x, x + width, y, y + height, width, height, u, v);
-    }
-
-    void drawTexture(PoseStack stack, Identifier texture, float x1, float x2, float y1, float y2, float regionWidth, float regionHeight, float u, float v) {
-        this.drawTexturedQuad(stack, texture, x1, x2, y1, y2, (float) 0, u / TEXTURE_SIZE_F, (u + regionWidth) / TEXTURE_SIZE_F, v / TEXTURE_SIZE_F, (v + regionHeight) / TEXTURE_SIZE_F);
-    }
-
-    void drawTexturedQuad(PoseStack stack, Identifier texture, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {
-        RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        Matrix4f matrix4f = stack.last().pose();
-        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferBuilder.addVertex(matrix4f, x1, y1, z).setUv(u1, v1);
-        bufferBuilder.addVertex(matrix4f, x1, y2, z).setUv(u1, v2);
-        bufferBuilder.addVertex(matrix4f, x2, y2, z).setUv(u2, v2);
-        bufferBuilder.addVertex(matrix4f, x2, y1, z).setUv(u2, v1);
-        var mesh = bufferBuilder.build();
-        if (mesh != null)
-            BufferUploader.drawWithShader(mesh);
     }
 
     /**

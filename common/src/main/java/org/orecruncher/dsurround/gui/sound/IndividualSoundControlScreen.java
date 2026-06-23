@@ -4,6 +4,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -120,16 +122,16 @@ public class IndividualSoundControlScreen extends Screen {
             GameUtils.getSoundManager().tick(false);
     }
 
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return super.keyPressed(keyCode, scanCode, modifiers) || this.searchField.keyPressed(keyCode, scanCode, modifiers);
+    public boolean keyPressed(KeyEvent keyEvent) {
+        return super.keyPressed(keyEvent) || this.searchField.keyPressed(keyEvent);
     }
 
     public void closeScreen() {
         GameUtils.setScreen(this.parent);
     }
 
-    public boolean charTyped(char codePoint, int modifiers) {
-        return this.searchField.charTyped(codePoint, modifiers);
+    public boolean charTyped(CharacterEvent event) {
+        return this.searchField.charTyped(event);
     }
 
     public void render(final GuiGraphics context, int mouseX, int mouseY, float partialTicks) {
@@ -151,7 +153,7 @@ public class IndividualSoundControlScreen extends Screen {
             final IndividualSoundControlListEntry entry = this.soundConfigList.getEntryAt(mouseX, mouseY);
             if (entry != null) {
                 final List<FormattedCharSequence> toolTip = entry.getToolTip(mouseX, mouseY);
-                context.renderTooltip(this.font, toolTip, mouseX, mouseY + TOOLTIP_Y_OFFSET);
+                context.setTooltipForNextFrame(this.font, toolTip, mouseX, mouseY + TOOLTIP_Y_OFFSET);
             }
         }
     }

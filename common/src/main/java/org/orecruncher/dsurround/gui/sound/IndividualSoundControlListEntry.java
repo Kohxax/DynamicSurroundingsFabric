@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
@@ -115,10 +116,10 @@ public class IndividualSoundControlListEntry extends ContainerObjectSelectionLis
         return this.children;
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        AbstractWidget child = this.findChild(mouseX, mouseY);
+    public boolean mouseClicked(MouseButtonEvent event, boolean heldDown) {
+        AbstractWidget child = this.findChild(event.x(), event.y());
         if (child != null)
-            return child.mouseClicked(mouseX, mouseY, button);
+            return child.mouseClicked(event, heldDown);
         return false;
     }
 
@@ -127,17 +128,17 @@ public class IndividualSoundControlListEntry extends ContainerObjectSelectionLis
         return ImmutableList.of();
     }
 
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        AbstractWidget child = this.findChild(mouseX, mouseY);
+    public boolean mouseReleased(MouseButtonEvent event) {
+        AbstractWidget child = this.findChild(event.x(), event.y());
         if (child != null)
-            return child.mouseReleased(mouseX, mouseY, button);
+            return child.mouseReleased(event);
         return false;
     }
 
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        AbstractWidget child = this.findChild(mouseX, mouseY);
+    public boolean mouseDragged(MouseButtonEvent event, double deltaX, double deltaY) {
+        AbstractWidget child = this.findChild(event.x(), event.y());
         if (child != null)
-            return child.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+            return child.mouseDragged(event, deltaX, deltaY);
         return false;
     }
 
@@ -160,8 +161,12 @@ public class IndividualSoundControlListEntry extends ContainerObjectSelectionLis
     }
 
     @Override
-    public void render(final @NotNull GuiGraphics context, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean mouseOver, float partialTick_) {
+    public void renderContent(final @NotNull GuiGraphics context, int mouseX, int mouseY, boolean mouseOver, float partialTick_) {
         final var font = GameUtils.getTextRenderer();
+        final int rowTop = this.getContentY();
+        final int rowLeft = this.getContentX();
+        final int rowWidth = this.getContentWidth();
+        final int rowHeight = this.getContentHeight();
         final int labelY = rowTop + (rowHeight - font.lineHeight) / 2;
 
         this.label.setX(rowLeft);
