@@ -42,7 +42,7 @@ class WaterySurfaceAccent implements IFootstepAccentProvider {
 
             if (!addAcoustic && world.isRainingAt(up)) {
                 // Get the precipitation type at the location
-                var precipitation = world.getBiome(up).value().getPrecipitationAt(up);
+                var precipitation = world.getBiome(up).value().getPrecipitationAt(up, world.getSeaLevel());
                 addAcoustic = precipitation == Biome.Precipitation.RAIN;
             }
         }

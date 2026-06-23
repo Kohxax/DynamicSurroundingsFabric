@@ -24,7 +24,7 @@ public class VillageScanner extends AbstractScanner {
         Player player = GameUtils.getPlayer().orElseThrow();
 
         // Only for surface worlds.  Other types of worlds are interpreted as not having villages.
-        if (world.dimensionType().natural()) {
+        if (!world.dimensionType().hasFixedTime()) {
             var playerEyes = player.getEyePosition();
             AABB box = AABB.unitCubeFromLowerCorner(playerEyes).inflate(VILLAGE_RANGE);
 

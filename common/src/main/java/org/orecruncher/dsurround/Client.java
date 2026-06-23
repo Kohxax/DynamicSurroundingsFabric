@@ -3,6 +3,7 @@ package org.orecruncher.dsurround;
 import dev.architectury.event.events.client.ClientCommandRegistrationEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
+import net.minecraft.resources.Identifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.server.packs.PackType;
@@ -101,7 +102,7 @@ public final class Client {
         }
 
         // Register the resource listener
-        ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, new ReloadListener());
+        ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, new ReloadListener(), Identifier.fromNamespaceAndPath(Constants.MOD_ID, "reload_listener"));
 
         // Do the handlers
         Handlers.registerHandlers();
@@ -194,7 +195,7 @@ public final class Client {
                 var result = versionQueryResult.get();
                 this.logger.info("Update to %s version %s is available", result.displayName(), result.version());
                 var player = GameUtils.getPlayer();
-                player.ifPresent(p -> p.sendSystemMessage(result.getChatText()));
+                player.ifPresent(p -> p.displayClientMessage(result.getChatText(), false));
             } else if(Config.logging.enableModUpdateChatMessage) {
                 this.logger.info("The mod version is current");
             }

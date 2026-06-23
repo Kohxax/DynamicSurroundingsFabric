@@ -39,7 +39,7 @@ public class DimensionInfo {
         if (this.isFlatWorld)
             this.seaLevel = 0;
 
-        this.compassWobble = !world.dimensionType().natural();
+        this.compassWobble = world.dimensionType().hasFixedTime();
     }
 
     public void update(DimensionConfigRule config) {

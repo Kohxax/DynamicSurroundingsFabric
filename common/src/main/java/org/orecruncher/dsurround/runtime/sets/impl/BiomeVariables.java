@@ -17,7 +17,8 @@ public class BiomeVariables extends VariableSet<IBiomeVariables> implements IBio
 
     private final Lazy<String> precipitationType = new Lazy<>(() -> {
         var pos = GameUtils.getPlayer().orElseThrow().blockPosition();
-        return this.biome.getPrecipitationAt(pos).name();
+        var world = GameUtils.getWorld().orElseThrow();
+        return this.biome.getPrecipitationAt(pos, world.getSeaLevel()).name();
     });
     private final Lazy<String> id = new Lazy<>(() -> this.info.getBiomeId().toString());
 

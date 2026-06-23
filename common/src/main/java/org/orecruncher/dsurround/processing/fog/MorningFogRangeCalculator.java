@@ -90,7 +90,7 @@ public class MorningFogRangeCalculator extends VanillaFogRangeCalculator {
     }
 
     private boolean isFogAllowed() {
-        return GameUtils.getWorld().map(w -> w.dimensionType().natural()).orElse(false);
+        return GameUtils.getWorld().map(w -> w.dimensionType().hasSkyLight() && !w.dimensionType().hasFixedTime()).orElse(false);
     }
 
     private float getCelestialAngleDegrees() {
