@@ -136,7 +136,7 @@ public class BlockLibrary implements IBlockLibrary {
         var blockRegistry = RegistryUtils.getRegistry(Registries.BLOCK).orElseThrow();
 
         StringBuilder builder = new StringBuilder();
-        builder.append("Tag: ").append(blockTag.identifier());
+        builder.append("Tag: ").append(blockTag.location());
         blocks.stream()
                 .map(b -> Objects.requireNonNull(blockRegistry.getKey(b)).toString())
                 .sorted()

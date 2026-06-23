@@ -73,14 +73,14 @@ public class SereneSeasons extends AbstractSeasonProvider {
     public Biome.Precipitation getPrecipitationAt(BlockPos blockPos) {
         var level = this.level();
         var biome = level.getBiome(blockPos);
-        return SeasonHooks.getPrecipitationAtSeasonal(level, biome, blockPos);
+        return SeasonHooks.getPrecipitationAtSeasonal(level, biome, blockPos, level.getSeaLevel());
     }
 
     @Override
     public float getTemperature(BlockPos blockPos) {
         var level = this.level();
         var biome = level.getBiome(blockPos);
-        return SeasonHooks.getBiomeTemperature(level, biome, blockPos);
+        return SeasonHooks.getBiomeTemperature(level, biome, blockPos, level.getSeaLevel());
     }
 
     @Override

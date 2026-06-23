@@ -1,7 +1,9 @@
 package org.orecruncher.dsurround.effects.particles;
 
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
@@ -12,6 +14,7 @@ import org.orecruncher.dsurround.lib.random.IRandomizer;
 import org.orecruncher.dsurround.lib.registry.RegistryUtils;
 import org.orecruncher.dsurround.lib.random.Randomizer;
 import org.orecruncher.dsurround.mixins.core.MixinParticleManager;
+import org.orecruncher.dsurround.mixins.core.MixinParticleResources;
 
 public final class ParticleUtils {
 
@@ -19,9 +22,22 @@ public final class ParticleUtils {
 
     public static SpriteSet getSpriteProvider(ParticleType<?> particleType) {
         var id = RegistryUtils.getRegistry(Registries.PARTICLE_TYPE)
-                .map(r -> r.getResourceKey(particleType).map(ResourceKey::location))
+                .map(r -> r.getResourceKey(particleType).map(ResourceKey::identifier))
                 .orElseThrow();
-        return ((MixinParticleManager) GameUtils.getParticleManager()).dsurround_getSpriteAwareFactories().get(id.get());
+        var resourceManager = ((MixinParticleManager) GameUtils.getParticleManager()).dsurround_getResourceManager();
+        return ((MixinParticleResources) (Object) resourceManager).dsurround_getSpriteSets().get(id.get());
+    }
+
+    public static TextureAtlasSprite getFirstSprite(SpriteSet spriteSet) {
+        return spriteSet.first();
+    }
+
+    /**
+     * Returns a dummy sprite for particles that don't use the sprite for UV coordinates.
+     * This borrows the first sprite from the CLOUD particle type.
+     */
+    public static TextureAtlasSprite getDummySprite() {
+        return getFirstSprite(getSpriteProvider(ParticleTypes.CLOUD));
     }
 
     public static Vec3 getBreathOrigin(final LivingEntity entity) {

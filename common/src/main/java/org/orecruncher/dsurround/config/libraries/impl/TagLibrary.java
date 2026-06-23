@@ -158,7 +158,7 @@ public class TagLibrary implements ITagLibrary {
     @Override
     public <T> String asString(Stream<TagKey<T>> tagStream) {
         return tagStream
-                .map(key -> key.identifier().toString())
+                .map(key -> key.location().toString())
                 .sorted()
                 .collect(Collectors.joining(", "));
     }
@@ -166,7 +166,7 @@ public class TagLibrary implements ITagLibrary {
     @Override
     public <T> Stream<Pair<TagKey<T>, Set<T>>> getEntriesByTag(ResourceKey<? extends Registry<T>> registryKey) {
         var registry = RegistryUtils.getRegistry(registryKey).orElseThrow();
-        return registry.holders()
+        return registry.listElements()
                 .flatMap(e -> this.streamTags(e).map(tag -> Pair.of(tag, e.value())))
                 .collect(groupingBy(Pair::key, mapping(Pair::value, toSet())))
                 .entrySet().stream().map(e -> Pair.of(e.getKey(), e.getValue()));

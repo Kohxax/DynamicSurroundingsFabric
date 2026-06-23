@@ -14,18 +14,21 @@ public class RegistryUtils {
     @SuppressWarnings("unchecked")
     public static <T> Optional<Registry<T>> getRegistry(ResourceKey<? extends Registry<T>> registryKey) {
         return GameUtils.getRegistryManager()
-                .flatMap(rm -> rm.registry(registryKey))
-                .or(() -> (Optional<Registry<T>>) BuiltInRegistries.REGISTRY.getOptional(registryKey.identifier()));
+                .flatMap(rm -> rm.lookup(registryKey))
+                .or(() -> {
+                    var opt = BuiltInRegistries.REGISTRY.getOptional(registryKey.identifier());
+                    return opt.map(r -> (Registry<T>) r);
+                });
     }
 
     public static <T> Optional<Holder.Reference<T>> getRegistryEntry(ResourceKey<Registry<T>> registryKey, T instance) {
         return getRegistry(registryKey)
-                .flatMap(r -> r.getHolder(r.getId(instance)));
+                .flatMap(r -> r.get(r.getId(instance)));
     }
 
     public static <T> Optional<Holder.Reference<T>> getRegistryEntry(ResourceKey<Registry<T>> registryKey, Identifier location) {
         ResourceKey<T> rk = ResourceKey.create(registryKey, location);
         return getRegistry(registryKey)
-                .flatMap(registry -> registry.getHolder(rk));
+                .flatMap(registry -> registry.get(rk));
     }
 }

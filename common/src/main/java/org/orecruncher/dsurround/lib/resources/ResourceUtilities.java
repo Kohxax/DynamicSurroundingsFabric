@@ -79,8 +79,8 @@ public final class ResourceUtilities {
     public Collection<TagFile> findClientTagFiles(TagKey<?> tagKey) {
         var result = new ObjectArray<DiscoveredResource<TagFile>>();
         var tagDir = Registries.tagsDirPath(tagKey.registry());
-        var tagFolder = "%s/%s".formatted(tagDir, tagKey.identifier().getPath());
-        var tagFolderPack = "%s:%s".formatted(tagKey.identifier().getNamespace(), tagFolder);
+        var tagFolder = "%s/%s".formatted(tagDir, tagKey.location().getPath());
+        var tagFolderPack = "%s:%s".formatted(tagKey.location().getNamespace(), tagFolder);
         result.addAll(this.packResourceFinder.find(TagFile.CODEC, tagFolderPack));
         result.addAll(this.modConfigHelper.find(TagFile.CODEC, tagFolder));
         result.addAll(this.diskResourceHelper.find(TagFile.CODEC, tagFolder));

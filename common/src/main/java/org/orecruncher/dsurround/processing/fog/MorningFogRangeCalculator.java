@@ -5,6 +5,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.random.WeightedList;
 import org.jetbrains.annotations.NotNull;
 import org.orecruncher.dsurround.Configuration;
+import org.orecruncher.dsurround.lib.DayCycle;
 import org.orecruncher.dsurround.lib.GameUtils;
 import org.orecruncher.dsurround.lib.MinecraftClock;
 import org.orecruncher.dsurround.lib.random.Randomizer;
@@ -94,7 +95,7 @@ public class MorningFogRangeCalculator extends VanillaFogRangeCalculator {
     }
 
     private float getCelestialAngleDegrees() {
-        return GameUtils.getWorld().map(w -> w.getTimeOfDay(1F) * 360F).orElseThrow();
+        return GameUtils.getWorld().map(w -> DayCycle.getSunAngle(w) * 360F).orElseThrow();
     }
 
     @NotNull

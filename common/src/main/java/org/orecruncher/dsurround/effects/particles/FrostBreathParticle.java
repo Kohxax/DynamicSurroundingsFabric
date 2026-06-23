@@ -4,6 +4,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,8 +18,8 @@ public class FrostBreathParticle extends SingleQuadParticle {
     private final SpriteSet spriteProvider;
 
     public FrostBreathParticle(LivingEntity entity) {
-        super((ClientLevel) entity.level(), 0, 0, 0, 0.0, 0.0, 0.0);
-        
+        super((ClientLevel) entity.level(), 0, 0, 0, 0.0, 0.0, 0.0, FrostBreathParticle.getInitialSprite());
+
         final IRandomizer rand = Randomizer.current();
 
         // Reuse the cloud sheet
@@ -45,6 +46,17 @@ public class FrostBreathParticle extends SingleQuadParticle {
         this.lifetime = (int) Math.max((float) i * 2.5F, 1.0F);
         this.hasPhysics = false;
         this.setSpriteFromAge(this.spriteProvider);
+    }
+
+    private static TextureAtlasSprite getInitialSprite() {
+        var spriteSet = ParticleUtils.getSpriteProvider(ParticleTypes.CLOUD);
+        // Pick a sprite from the set for the constructor
+        return ParticleUtils.getFirstSprite(spriteSet);
+    }
+
+    @Override
+    protected @NotNull SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.TRANSLUCENT;
     }
 
     @Override

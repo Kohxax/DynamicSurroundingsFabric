@@ -1,9 +1,6 @@
 package org.orecruncher.dsurround.effects.particles;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -19,8 +16,6 @@ import org.orecruncher.dsurround.lib.GameUtils;
 import org.orecruncher.dsurround.lib.collections.ObjectArray;
 
 import java.lang.ref.WeakReference;
-import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -31,16 +26,10 @@ import java.util.function.Supplier;
  */
 public final class ParticleRenderCollection<TParticle extends SingleQuadParticle> extends Particle {
 
-    public static final ParticleRenderType DSURROUND_RENDER_TYPE = new ParticleRenderType("dsurround_custom");
-
-    private final Consumer<Camera> setup;
-    private final Supplier<Identifier> textureSupplier;
     private final ObjectArray<TParticle> particles;
 
-    private ParticleRenderCollection(@NotNull ClientLevel clientLevel, @NotNull Supplier<Identifier> textureSupplier, @Nullable Consumer<Camera> setup) {
+    private ParticleRenderCollection(@NotNull ClientLevel clientLevel) {
         super(clientLevel, 0, 0, 0);
-        this.setup = Objects.requireNonNullElseGet(setup, () -> this::standardSetup);
-        this.textureSupplier = textureSupplier;
         this.particles = new ObjectArray<>(128);
         this.tick();
     }
@@ -48,8 +37,9 @@ public final class ParticleRenderCollection<TParticle extends SingleQuadParticle
     @NotNull
     @Override
     public ParticleRenderType getGroup() {
-        // Can't use NO_RENDER as the ParticleEngine will not attempt to render
-        return ParticleRenderCollection.DSURROUND_RENDER_TYPE;
+        // Use NO_RENDER since we manage sub-particle rendering ourselves
+        // Sub-particles are added directly to the particle engine
+        return ParticleRenderType.NO_RENDER;
     }
 
     @Override
@@ -64,27 +54,10 @@ public final class ParticleRenderCollection<TParticle extends SingleQuadParticle
         }
     }
 
-    @Override
-    public void render(@NotNull VertexConsumer vertexConsumer, @NotNull Camera camera, float tickDelta) {
-        if (this.particles.isEmpty())
-            return;
-
-        RenderSystem.setShaderTexture(0, this.textureSupplier.get());
-        this.setup.accept(camera);
-        this.particles.forEach(p -> p.render(vertexConsumer, camera, tickDelta));
-    }
-
-    private void standardSetup(@NotNull Camera camera) {
-        RenderSystem.depthMask(true);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-    }
-
     public void add(@NotNull TParticle particle) {
-        // Can only accept custom style particles
-        if (particle.getGroup() != this.getGroup())
-            throw new RuntimeException("Can only add render type %s particles to collection".formatted(this.getGroup()));
         this.particles.add(particle);
+        // Also add to the particle engine so it participates in the extract/render pipeline
+        GameUtils.getParticleManager().add(particle);
     }
 
     /**
@@ -94,18 +67,15 @@ public final class ParticleRenderCollection<TParticle extends SingleQuadParticle
     public static final class Helper<TParticle extends SingleQuadParticle> {
 
         private final String name;
-        private final Consumer<Camera> setup;
-        private final Supplier<Identifier> textureSupplier;
 
         private WeakReference<ParticleRenderCollection<TParticle>> particle;
         private String diagnostics;
 
         /**
          * Initializes a helper instance used to manage the state of the main particle within the ParticleEngine.
-         * Particle rendering will use the default setup.
          *
          * @param name The name of the helper; used in diagnostics
-         * @param textureSupplier Provides the texture to bind when rendering
+         * @param textureSupplier Provides the texture to bind when rendering (kept for API compatibility)
          */
         public Helper(@NotNull String name, @NotNull Supplier<Identifier> textureSupplier) {
             this(name, textureSupplier, null);
@@ -115,13 +85,11 @@ public final class ParticleRenderCollection<TParticle extends SingleQuadParticle
          * Initializes a helper instance used to manage the state of the main particle within the ParticleEngine.
          *
          * @param name The name of the helper; used in diagnostics
-         * @param textureSupplier Provides the texture to bind when rendering
-         * @param setup Provides for the configuration of the rendering system if the default is not enough
+         * @param textureSupplier Provides the texture to bind when rendering (kept for API compatibility)
+         * @param setup Unused in new rendering system, kept for API compatibility
          */
-        public Helper(@NotNull String name, @NotNull Supplier<Identifier> textureSupplier, @Nullable Consumer<Camera> setup) {
+        public Helper(@NotNull String name, @NotNull Supplier<Identifier> textureSupplier, @Nullable Object setup) {
             this.name = name;
-            this.setup = setup;
-            this.textureSupplier = textureSupplier;
             this.diagnostics = this.name;
 
             ClientLifecycleEvent.CLIENT_LEVEL_LOAD.register(state -> this.clear());
@@ -142,7 +110,7 @@ public final class ParticleRenderCollection<TParticle extends SingleQuadParticle
         private ParticleRenderCollection<TParticle> get() {
             var pc = this.particle != null ? this.particle.get() : null;
             if (pc == null || !pc.isAlive()) {
-                pc = new ParticleRenderCollection<>(GameUtils.getWorld().orElseThrow(), this.textureSupplier, this.setup);
+                pc = new ParticleRenderCollection<>(GameUtils.getWorld().orElseThrow());
                 this.particle = new WeakReference<>(pc);
                 GameUtils.getParticleManager().add(pc);
             }

@@ -1,14 +1,17 @@
 package org.orecruncher.dsurround.effects.particles;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
 import org.orecruncher.dsurround.config.WaterRippleStyle;
 import org.orecruncher.dsurround.lib.GameUtils;
 import org.orecruncher.dsurround.lib.gui.ColorPalette;
@@ -19,18 +22,20 @@ public class WaterRippleParticle extends SingleQuadParticle {
     private static final int BLOCKS_FROM_FADE = 5;
     private static final int MAX_BLOCKS_FADE = 12;
 
+    // Quaternion for 90 degree rotation around X axis to make the quad horizontal (facing up)
+    private static final Quaternionf HORIZONTAL_ROTATION = new Quaternionf().rotateX((float) (-Math.PI / 2.0));
+
     private final WaterRippleStyle rippleStyle;
 
     private final float growthRate;
-    private final float scaledWidth;
     private float texU1;
     private float texU2;
     private float texV1;
     private float texV2;
     private final float defaultColorAlpha;
 
-    public WaterRippleParticle(WaterRippleStyle rippleStyle, ClientLevel world, double x, double y, double z) {
-        super(world, x, y, z, 0.0, 0.0, 0.0);
+    public WaterRippleParticle(WaterRippleStyle rippleStyle, ClientLevel world, double x, double y, double z, TextureAtlasSprite sprite) {
+        super(world, x, y, z, 0.0, 0.0, 0.0, sprite);
 
         this.rippleStyle = rippleStyle;
         this.lifetime = rippleStyle.getMaxAge();
@@ -38,11 +43,9 @@ public class WaterRippleParticle extends SingleQuadParticle {
         if (rippleStyle.doScaling()) {
             this.growthRate = this.lifetime / 500F;
             this.quadSize = this.growthRate;
-            this.scaledWidth = this.quadSize * TEX_SIZE_HALF;
         } else {
             this.growthRate = 0F;
             this.quadSize = 1F;
-            this.scaledWidth = 0.5F;
         }
 
         this.y -= 0.2D;
@@ -70,8 +73,13 @@ public class WaterRippleParticle extends SingleQuadParticle {
     }
 
     @Override
+    protected @NotNull SingleQuadParticle.Layer getLayer() {
+        return new SingleQuadParticle.Layer(true, this.rippleStyle.getTexture(), RenderPipelines.TRANSLUCENT_PARTICLE);
+    }
+
+    @Override
     public @NotNull ParticleRenderType getGroup() {
-        return ParticleRenderCollection.DSURROUND_RENDER_TYPE;
+        return ParticleRenderType.SINGLE_QUADS;
     }
 
     @Override
@@ -100,35 +108,13 @@ public class WaterRippleParticle extends SingleQuadParticle {
     }
 
     @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
-
-        Vec3 vec3d = camera.getPosition();
-        float X = (float)(Mth.lerp(tickDelta, this.xo, this.x) - vec3d.x());
-        float Y = (float)(Mth.lerp(tickDelta, this.yo, this.y) - vec3d.y());
-        float Z = (float)(Mth.lerp(tickDelta, this.zo, this.z) - vec3d.z());
-
-        int p = this.getLightColor(tickDelta);
-
-        vertexConsumer
-                .addVertex(-this.scaledWidth + X, Y, this.scaledWidth + Z)
-                .setUv(this.texU2, this.texV2)
-                .setColor(this.rCol, this.gCol, this.bCol, this.alpha)
-                .setLight(p);
-        vertexConsumer
-                .addVertex(this.scaledWidth + X, Y, this.scaledWidth + Z)
-                .setUv( this.texU2, this.texV1)
-                .setColor(this.rCol, this.gCol, this.bCol, this.alpha)
-                .setLight(p);
-        vertexConsumer
-                .addVertex(this.scaledWidth + X, Y, -this.scaledWidth + Z)
-                .setUv( this.texU1, this.texV1)
-                .setColor(this.rCol, this.gCol, this.bCol, this.alpha)
-                .setLight(p);
-        vertexConsumer
-                .addVertex(-this.scaledWidth + X, Y, -this.scaledWidth + Z)
-                .setUv(this.texU1, this.texV2)
-                .setColor(this.rCol, this.gCol, this.bCol, this.alpha)
-                .setLight(p);
+    public void extract(@NotNull QuadParticleRenderState renderState, @NotNull Camera camera, float tickDelta) {
+        // Use a horizontal quaternion to make the quad flat on the water surface
+        Vec3 camPos = camera.position();
+        float x = (float)(Mth.lerp(tickDelta, this.xo, this.x) - camPos.x());
+        float y = (float)(Mth.lerp(tickDelta, this.yo, this.y) - camPos.y());
+        float z = (float)(Mth.lerp(tickDelta, this.zo, this.z) - camPos.z());
+        this.extractRotatedQuad(renderState, HORIZONTAL_ROTATION, x, y, z, tickDelta);
     }
 
     @Override

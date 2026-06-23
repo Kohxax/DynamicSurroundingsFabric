@@ -29,6 +29,7 @@
     "core.MixinFogRenderer",
     "core.MixinLivingEntity",
     "core.MixinParticleManager",
+    "core.MixinParticleResources",
     "core.MixinRainSplashParticle",
     "core.MixinRaycastContextAccessor",
     "core.MixinSoundOptionsScreen",

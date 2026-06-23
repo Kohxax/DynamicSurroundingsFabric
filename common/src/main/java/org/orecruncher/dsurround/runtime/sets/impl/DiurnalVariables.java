@@ -34,7 +34,7 @@ public class DiurnalVariables extends VariableSet<IDiurnalVariables> implements 
             this.isSunrise = cycle == DayCycle.SUNRISE;
             this.isSunset = cycle == DayCycle.SUNSET;
             this.moonPhaseFactor = DayCycle.getMoonSize(world);
-            this.celestialAngle = world.getTimeOfDay(1F);
+            this.celestialAngle = DayCycle.getSunAngle(world);
         } else {
             this.isDay = false;
             this.isNight = false;

@@ -122,7 +122,7 @@ public class ClientTagLoader {
 
                 var lookup = new TagEntry.Lookup<Identifier>() {
                     @Override
-                    public @NotNull Identifier element(@NotNull Identifier id) {
+                    public @NotNull Identifier element(@NotNull Identifier id, boolean required) {
                         return id;
                     }
 
@@ -158,7 +158,7 @@ public class ClientTagLoader {
     }
 
     private <T> Optional<Iterable<Holder<T>>> shortcutLookup(TagKey<T> tagKey) {
-        var namespace = tagKey.identifier().getNamespace();
+        var namespace = tagKey.location().getNamespace();
         // If its one of our tags, we always do the long lookup. They aren't really tags.
         if (namespace.equals(Library.MOD_ID))
             return Optional.empty();
@@ -170,7 +170,7 @@ public class ClientTagLoader {
             var registry = RegistryUtils.getRegistry(tagKey.registry());
             if (registry.isEmpty())
                 return Optional.empty();
-            var holderSet = registry.get().getTag(tagKey);
+            var holderSet = registry.get().get(tagKey);
             if (holderSet.isPresent())
                 return Optional.of(holderSet.get());
             return Optional.of(ImmutableList.of());

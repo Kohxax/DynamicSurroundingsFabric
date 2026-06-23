@@ -8,6 +8,7 @@ import org.orecruncher.dsurround.Configuration;
 import org.orecruncher.dsurround.config.WaterRippleStyle;
 import org.orecruncher.dsurround.config.libraries.ITagLibrary;
 import org.orecruncher.dsurround.effects.particles.ParticleRenderCollection;
+import org.orecruncher.dsurround.effects.particles.ParticleUtils;
 import org.orecruncher.dsurround.effects.particles.WaterRippleParticle;
 import org.orecruncher.dsurround.lib.di.ContainerManager;
 import org.orecruncher.dsurround.tags.FluidTags;
@@ -28,7 +29,8 @@ public class WaterRippleHandler {
     }
 
     private static void addWaterRipple(ClientLevel world, double x, double y, double z) {
-        var ripple = new WaterRippleParticle(CONFIG.waterRippleStyle, world, x, y, z);
+        var sprite = ParticleUtils.getDummySprite();
+        var ripple = new WaterRippleParticle(CONFIG.waterRippleStyle, world, x, y, z, sprite);
         rippleHelper.add(ripple);
     }
 

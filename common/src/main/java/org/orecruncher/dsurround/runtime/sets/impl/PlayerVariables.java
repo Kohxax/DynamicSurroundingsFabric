@@ -56,7 +56,7 @@ public class PlayerVariables extends VariableSet<IPlayerVariables> implements IP
             this.isWet = player.isInWaterOrRain();
             this.isRiding = player.isPassenger();
             this.isOnGround = player.onGround();
-            this.isMoving = player.bob != player.oBob;
+            this.isMoving = player.walkAnimation.isMoving();
             this.health = player.getHealth();
             this.maxHealth = player.getMaxHealth();
             this.foodLevel = hm.getFoodLevel();

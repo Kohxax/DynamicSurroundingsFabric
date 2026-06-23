@@ -111,9 +111,9 @@ public class ItemLibrary implements IItemLibrary {
     @Nullable
     private static SoundEvent getEquipableSoundEvent(ItemStack stack) {
         SoundEvent itemEquipSound = null;
-        var equipable = Equipable.get(stack);
-        if (equipable != null) {
-            itemEquipSound = equipable.getEquipSound().value();
+        var equippable = stack.get(net.minecraft.core.component.DataComponents.EQUIPPABLE);
+        if (equippable != null) {
+            itemEquipSound = equippable.equipSound().value();
         }
         return itemEquipSound;
     }

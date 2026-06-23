@@ -1,6 +1,8 @@
 package org.orecruncher.dsurround.lib;
 
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.orecruncher.dsurround.Constants;
 
 public enum DayCycle {
@@ -39,11 +41,15 @@ public enum DayCycle {
         return getCycle(world) == DayCycle.SUNSET;
     }
 
+    public static float getSunAngle(final Level world) {
+        return world.environmentAttributes().getDimensionValue(EnvironmentAttributes.SUN_ANGLE);
+    }
+
     public static DayCycle getCycle(final Level world) {
         if (world.dimensionType().hasCeiling() || !world.dimensionType().hasSkyLight())
             return DayCycle.NO_SKY;
 
-        final float angleDegrees = world.getTimeOfDay(0) * 360F;
+        final float angleDegrees = getSunAngle(world) * 360F;
 
         if (angleDegrees > DAYTIME_THRESHOLD)
             return DayCycle.DAYTIME;
@@ -57,7 +63,8 @@ public enum DayCycle {
     }
 
     public static float getMoonSize(final Level world) {
-        return world.getMoonBrightness();
+        var moonPhase = world.environmentAttributes().getDimensionValue(EnvironmentAttributes.MOON_PHASE);
+        return DimensionType.MOON_BRIGHTNESS_PER_PHASE[moonPhase.index()];
     }
 
     public String getFormattedName() {
