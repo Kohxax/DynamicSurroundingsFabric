@@ -124,9 +124,9 @@ public final class SoundFactoryBuilder {
     }
 
     public static SoundFactoryBuilder create(Music music) {
-        return new SoundFactoryBuilder(music.getEvent().value())
-                .setMusicMinDelay(music.getMinDelay())
-                .setMusicMaxDelay(music.getMaxDelay())
+        return new SoundFactoryBuilder(music.sound().value())
+                .setMusicMinDelay(music.minDelay())
+                .setMusicMaxDelay(music.maxDelay())
                 .setMusicReplaceCurrentMusic(music.replaceCurrentMusic());
     }
 

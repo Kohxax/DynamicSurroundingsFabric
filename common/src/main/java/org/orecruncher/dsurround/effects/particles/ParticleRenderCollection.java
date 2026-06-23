@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +29,7 @@ import java.util.function.Supplier;
  * to prevent it from going out of scope. It is modeled on the NoRenderParticle in
  * Minecraft.
  */
-public final class ParticleRenderCollection<TParticle extends TextureSheetParticle> extends Particle {
+public final class ParticleRenderCollection<TParticle extends SingleQuadParticle> extends Particle {
 
     public static final ParticleRenderType DSURROUND_RENDER_TYPE = new ParticleRenderType("dsurround_custom");
 
@@ -91,7 +91,7 @@ public final class ParticleRenderCollection<TParticle extends TextureSheetPartic
      * Helper that manages related particles in Minecraft's ParticleEngine. The helper will register with events, so
      * instances of this class need to be maintained as singletons throughout the lifetime of the client.
      */
-    public static final class Helper<TParticle extends TextureSheetParticle> {
+    public static final class Helper<TParticle extends SingleQuadParticle> {
 
         private final String name;
         private final Consumer<Camera> setup;

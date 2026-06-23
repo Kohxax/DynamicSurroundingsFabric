@@ -79,7 +79,7 @@ public class BlockInfo {
         this.version = version;
         this.soundOcclusion = getSoundOcclusionSetting(state);
         this.soundReflectivity = getSoundReflectionSetting(state);
-        this.stepSound = state.getSoundType().getStepSound().getLocation();
+        this.stepSound = state.getSoundType().getStepSound().location();
     }
 
     public boolean isDefault() {

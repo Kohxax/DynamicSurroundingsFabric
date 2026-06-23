@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
@@ -65,7 +65,7 @@ public class WarmToast  implements Toast {
         this.changed = true;
     }
 
-    public @NotNull Toast.Visibility render(@NotNull GuiGraphics guiGraphics, @NotNull ToastComponent toastComponent, long lastChanged) {
+    public @NotNull Toast.Visibility render(@NotNull GuiGraphics guiGraphics, @NotNull ToastManager toastComponent, long lastChanged) {
         if (this.changed) {
             this.lastChanged = lastChanged;
             this.changed = false;

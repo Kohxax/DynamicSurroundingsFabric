@@ -15,7 +15,7 @@ public class SoundToast {
 
     public static void create(Music music) {
         var soundLibrary = ContainerManager.resolve(ISoundLibrary.class);
-        var metadata = soundLibrary.getSoundMetadata(music.getEvent().value().getLocation());
+        var metadata = soundLibrary.getSoundMetadata(music.sound().value().location());
         if (metadata != null && !metadata.getCredits().isEmpty()) {
             var title = metadata.getTitle();
             if (!Component.empty().equals(title)) {

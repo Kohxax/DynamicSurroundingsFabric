@@ -3,7 +3,7 @@ package org.orecruncher.dsurround.effects.particles;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.orecruncher.dsurround.lib.random.IRandomizer;
 import org.orecruncher.dsurround.lib.random.Randomizer;
 
-public class FrostBreathParticle extends TextureSheetParticle {
+public class FrostBreathParticle extends SingleQuadParticle {
 
     private final SpriteSet spriteProvider;
 

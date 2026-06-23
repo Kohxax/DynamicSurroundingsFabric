@@ -65,7 +65,7 @@ public final class SoundLibrary implements ISoundLibrary {
     private static final Identifier MISSING_RESOURCE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "missing_sound");
     private static final SoundEvent MISSING = SoundEvent.createVariableRangeEvent(MISSING_RESOURCE);
 
-    private static final Identifier THUNDER_SOUND = SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation();
+    private static final Identifier THUNDER_SOUND = SoundEvents.LIGHTNING_BOLT_THUNDER.location();
     private static final Set<String> SOUND_REMAP_BLOCKED_MOBS = ImmutableSet.of("creeper");
     private static final BlockPos.MutableBlockPos MUTABLE_BLOCK_POS = new BlockPos.MutableBlockPos();
 
@@ -96,7 +96,7 @@ public final class SoundLibrary implements ISoundLibrary {
     @Override
     public Stream<String> dump() {
         return this.myRegistry.values().stream()
-                .sorted((c1, c2) -> Comparers.IDENTIFIER_NATURAL_COMPARABLE.compare(c1.getLocation(), c2.getLocation()))
+                .sorted((c1, c2) -> Comparers.IDENTIFIER_NATURAL_COMPARABLE.compare(c1.location(), c2.location()))
                 .map(Object::toString);
     }
 
@@ -114,7 +114,7 @@ public final class SoundLibrary implements ISoundLibrary {
 
         // Initializes the internal sound registry once all the other mods have
         // registered their sounds.
-        BuiltInRegistries.SOUND_EVENT.forEach(se -> this.myRegistry.put(se.getLocation(), se));
+        BuiltInRegistries.SOUND_EVENT.forEach(se -> this.myRegistry.put(se.location(), se));
 
         // Gather resource pack sound files and process them to ensure metadata is collected.
         // Resource pack sounds generally replace existing registration, but this allows for new
@@ -173,7 +173,7 @@ public final class SoundLibrary implements ISoundLibrary {
 
     @Override
     public ISoundFactory getSoundFactoryForMusic(Music music) {
-        return this.soundFactories.computeIfAbsent(music.getEvent().value().getLocation(), loc -> SoundFactoryBuilder.create(music).build());
+        return this.soundFactories.computeIfAbsent(music.sound().value().location(), loc -> SoundFactoryBuilder.create(music).build());
     }
 
     @Override
@@ -240,7 +240,7 @@ public final class SoundLibrary implements ISoundLibrary {
         if (soundInstance instanceof ConfigSoundInstance)
             return Optional.empty();
 
-        var soundLocation = soundInstance.getLocation();
+        var soundLocation = soundInstance.getIdentifier();
 
         // If it is a thunder sound, and replacement is not enabled, don't do anything
         if (THUNDER_SOUND.equals(soundLocation)) {
@@ -294,7 +294,7 @@ public final class SoundLibrary implements ISoundLibrary {
      */
     @Nullable
     private Identifier remapMobStepSound(SoundInstance soundInstance) {
-        var soundLocation = soundInstance.getLocation();
+        var soundLocation = soundInstance.getIdentifier();
         var path = soundLocation.getPath();
         if (path.startsWith("entity.") && path.endsWith("step")) {
             // Get the mob this sound is for. We do not want to convert mobs like creepers.
@@ -302,8 +302,8 @@ public final class SoundLibrary implements ISoundLibrary {
             if (!SOUND_REMAP_BLOCKED_MOBS.contains(mobType)) {
                 var level = GameUtils.getWorld().orElseThrow();
                 var pos = BlockPos.containing(soundInstance.getX(), soundInstance.getY(), soundInstance.getZ()).below();
-                soundLocation = level.getBlockState(pos).getSoundType().getStepSound().getLocation();
-                this.logger.debug("Mob sound remapping from %s to %s", soundInstance.getLocation(), soundLocation);
+                soundLocation = level.getBlockState(pos).getSoundType().getStepSound().location();
+                this.logger.debug("Mob sound remapping from %s to %s", soundInstance.getIdentifier(), soundLocation);
                 return soundLocation;
             }
         }
