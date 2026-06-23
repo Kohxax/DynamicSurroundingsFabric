@@ -25,6 +25,6 @@ public class VanillaSeasons extends AbstractSeasonProvider {
     @Override
     public float getTemperature(BlockPos blockPos) {
         var biome = this.level().getBiome(blockPos).value();
-        return ((IBiomeExtended)(Object)biome).dsurround_getTemperature(blockPos);
+        return ((IBiomeExtended)(Object)biome).dsurround_getTemperature(blockPos, this.level().getSeaLevel());
     }
 }
