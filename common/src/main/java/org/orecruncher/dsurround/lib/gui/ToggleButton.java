@@ -2,6 +2,7 @@ package org.orecruncher.dsurround.lib.gui;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
@@ -30,9 +31,9 @@ public abstract class ToggleButton extends Button {
 
     // Basically what ImageButton does but simplified.
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int i, int j, float f) {
+    protected void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
         Identifier resourceLocation = this.getSpriteToRender();
-        guiGraphics.blitSprite(resourceLocation, this.getX(), this.getY(), this.width, this.height);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourceLocation, this.getX(), this.getY(), this.width, this.height);
     }
 
     private Identifier getSpriteToRender() {

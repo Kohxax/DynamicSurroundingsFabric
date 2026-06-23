@@ -13,7 +13,7 @@ public class BiomeCommandHandler {
     public static Component execute(Identifier biomeIdentifier, String script) {
         return GameUtils.getRegistryManager()
                 .map(rm -> {
-                    var biome = rm.registry(Registries.BIOME).map(r -> r.get(biomeIdentifier));
+                    var biome = rm.lookup(Registries.BIOME).flatMap(r -> r.getOptional(biomeIdentifier));
                     if (biome.isEmpty()) {
                         return Component.translatable("dsurround.command.dsbiome.failure.unknown_biome", biomeIdentifier.toString());
                     }
