@@ -27,10 +27,10 @@
     "dsurround.mixins.fabric.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.9",
-    "minecraft": "~1.21.1",
+    "fabricloader": ">=0.18.1",
+    "minecraft": "~1.21.11",
     "java": ">=21",
-    "architectury": ">=13.0.8",
+    "architectury": ">=19.0.1",
     "fabric-api": "*"
   },
   "suggests": {

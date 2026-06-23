@@ -11,4 +11,3 @@ rootProject.name = 'dsurround'
 
 include 'common'
 include 'fabric'
-include 'neoforge'
